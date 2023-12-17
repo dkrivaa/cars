@@ -35,18 +35,18 @@ def data_license():
 def similar():
     resource_id1 = "053cea08-09bc-40ec-8f7a-156f0677aff3"
     # Specify the filter value for the degem_nm column
-    degem_nm = 117.343
-    # Construct the URL with the filter
-    api_url = f"https://data.gov.il/api/action/datastore_search?resource_id={resource_id1}&filters=%7B%22degem_nm%22%3A%20{degem_nm}%7D"
+    degem_nm = '92A'
+    # Construct the URL with the filter using the params parameter
+    params = {"resource_id": resource_id1, "filters": f'{{"degem_nm": "{degem_nm}", "shnat_yitzur":{2017}}}'}
+    api_url = "https://data.gov.il/api/action/datastore_search"
 
     # Make the HTTP request
-    response = requests.get(api_url)
+    response = requests.get(api_url, params=params)
 
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
-        print(response.status_code)
         # Parse the response JSON
         data = json.loads(response.text)
-        print(data)
+        print(data['result']['records'])
 
 
