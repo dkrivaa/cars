@@ -1,4 +1,4 @@
 import data
 
-# data.data_license()
-data.similar()
+data.data_license()
+# data.similar()

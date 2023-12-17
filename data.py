@@ -12,12 +12,12 @@ def data_license():
     resource_id = [resource_id1, resource_id2, resource_id3, resource_id4]
 
     # Specify the filter value for the mispar_rechev column
-    mispar_rechev_value = 1000039
+    mispar_rechev = 1000611
 
     info = []
     for resource in resource_id:
         # Construct the URL with the filter
-        api_url = f"https://data.gov.il/api/action/datastore_search?resource_id={resource}&filters=%7B%22mispar_rechev%22%3A%20{mispar_rechev_value}%7D"
+        api_url = f"https://data.gov.il/api/action/datastore_search?resource_id={resource}&filters=%7B%22mispar_rechev%22%3A%20{mispar_rechev}%7D"
 
         # Make the HTTP request
         response = requests.get(api_url)
@@ -29,15 +29,20 @@ def data_license():
             print(data['result']['records'])
             info.append(data['result']['records'])
 
-    print(info)
+    degem_nm = info[0][0]['degem_nm']
+    shnat_yitzur = info[0][0]['shnat_yitzur']
+
+    print(degem_nm, shnat_yitzur)
+    similar(mispar_rechev, degem_nm, shnat_yitzur)
 
 
-def similar():
+def similar(mispar_rechev, degem_nm, shnat_yitzur):
     resource_id1 = "053cea08-09bc-40ec-8f7a-156f0677aff3"
     # Specify the filter value for the degem_nm column
-    degem_nm = '92A'
+    degem_nm = degem_nm
+    year = shnat_yitzur
     # Construct the URL with the filter using the params parameter
-    params = {"resource_id": resource_id1, "filters": f'{{"degem_nm": "{degem_nm}", "shnat_yitzur":{2017}}}'}
+    params = {"resource_id": resource_id1, "filters": f'{{"degem_nm": "{degem_nm}", "shnat_yitzur":{year}}}'}
     api_url = "https://data.gov.il/api/action/datastore_search"
 
     # Make the HTTP request
@@ -47,6 +52,9 @@ def similar():
     if response.status_code == 200:
         # Parse the response JSON
         data = json.loads(response.text)
-        print(data['result']['records'])
+        similar_car_license = [d['mispar_rechev'] for d in data['result']['records'] if 'mispar_rechev' in d]
+        similar_car_license.remove(mispar_rechev)
+        print(len(similar_car_license))
+
 
 
