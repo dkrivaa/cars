@@ -50,7 +50,7 @@ def data_license(license):
         owner = [value for value in owner if value is not None]
         average_owner = (int(sum(owner) / len(owner)))
 
-        # # Calculating various comparable data
+        # # Calculating various comparable variables
         print('Kilometers - this car: ', info[2][0]['kilometer_test_aharon'], 'average similar cars: ', average_kilometer)
         print('owners - this car: ', len(info[3]), 'average similar cars: ', average_owner)
 
@@ -61,6 +61,12 @@ def data_license(license):
         # # Calculating various comparable data
         print('Kilometers - this car: ', 'No data available.', 'average similar cars: ', average_kilometer)
         print('owners - this car: ', 'No data available.', 'average similar cars: ', average_owner)
+
+    # Prices of new cars (same model) according to importers
+    prices(degem_nm, degem_cd)
+
+
+
 
 
 def similar(mispar_rechev, degem_nm, shnat_yitzur):
@@ -104,6 +110,7 @@ def calc_for_similar_cars(similar_car_license):
                         return None
             except:
                 return None
+
     async def kilometer(similar_car_license):
         resource_id3 = "56063a99-8a3e-4ff4-912e-5966c0279bad"  # Replace with your actual resource ID
         concurrent_requests_limit = 10000  # Set the desired limit
@@ -152,6 +159,28 @@ def calc_for_similar_cars(similar_car_license):
     asyncio.run(num_of_owners(similar_car_license))
 
     return kl, owner
+
+
+def prices(degem_nm, degem_cd):
+    # Data with prices for new cars as reported by importers
+    resource_id = '39f455bf-6db0-4926-859d-017f34eacbcb'
+
+    # Construct the URL with the filter using the params parameter
+    params = {"resource_id": resource_id, "filters": f'{{"degem_nm": "{degem_nm}", "degem_cd":{degem_cd}}}'}
+    api_url = "https://data.gov.il/api/action/datastore_search"
+
+    # Make the HTTP request
+    response = requests.get(api_url, params=params)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the response JSON
+        data = json.loads(response.text)
+        print(data['result']['records'])
+
+        # Create a dictionary where key is shnat_yitzur and value is mehir value
+        result_dict = {item['shnat_yitzur']: item['mehir'] for item in data['result']['records']}
+        print(result_dict)
 
 
 
