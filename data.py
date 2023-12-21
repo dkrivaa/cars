@@ -184,6 +184,3 @@ def prices(degem_nm, degem_cd):
 
 
 
-
-
-
