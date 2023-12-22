@@ -40,8 +40,7 @@ def data_license(license):
     similar_car_license = similar(mispar_rechev, degem_nm, shnat_yitzur)
     print('similar cars: ', len(similar_car_license))
 
-
-    if shnat_yitzur > 2016:
+    if shnat_yitzur > 2016 & len(info[2]) > 0:
         kl, owner = calc_for_similar_cars(similar_car_license)
 
         kl = [value for value in kl if value is not None]
@@ -63,7 +62,7 @@ def data_license(license):
         print('owners - this car: ', 'No data available.', 'average similar cars: ', average_owner)
 
     # Prices of new cars (same model) according to importers
-    prices(degem_nm, degem_cd)
+    prices(degem_nm, degem_cd, shnat_yitzur)
 
 
 
@@ -161,7 +160,7 @@ def calc_for_similar_cars(similar_car_license):
     return kl, owner
 
 
-def prices(degem_nm, degem_cd):
+def prices(degem_nm, degem_cd, shnat_yitzur):
     # Data with prices for new cars as reported by importers
     resource_id = '39f455bf-6db0-4926-859d-017f34eacbcb'
 
@@ -180,7 +179,10 @@ def prices(degem_nm, degem_cd):
 
         # Create a dictionary where key is shnat_yitzur and value is mehir value
         result_dict = {item['shnat_yitzur']: item['mehir'] for item in data['result']['records']}
-        print(result_dict)
+        if result_dict[shnat_yitzur]:
+            print(result_dict[shnat_yitzur])
+        else:
+            print('No Data')
 
 
 
