@@ -10,7 +10,7 @@ async def fetch_price(session, degem_nm, degem_cd, shnat_yitzur):
         "filters": f'{{"degem_nm": "{degem_nm}", "degem_cd": {degem_cd}, "shnat_yitzur":{shnat_yitzur}}}'
     }
 
-    async with session.get(url, params=params2) as response:
+    async with session.get(url, params=params2, timeout=aiohttp.ClientTimeout(total=360)) as response:
         data2 = await response.json()
         if 'records' in data2['result'] and data2['result']['records']:
             return data2['result']['records'][0]['mehir']
@@ -19,7 +19,7 @@ async def process_car(session, car, resource_id1):
     params1 = {"resource_id": resource_id1, "filters": f'{{"mispar_rechev": "{car}"}}'}
     url = 'https://data.gov.il/api/action/datastore_search'
 
-    async with session.get(url, params=params1) as response:
+    async with session.get(url, params=params1, timeout=aiohttp.ClientTimeout(total=360)) as response:
         data1 = await response.json()
         if 'records' in data1['result'] and data1['result']['records']:
             degem_nm = data1['result']['records'][0]['degem_nm']
@@ -30,8 +30,15 @@ async def process_car(session, car, resource_id1):
 
 async def main():
     # Load only necessary columns
-    df = pd.read_csv('owner.csv', usecols=['mispar_rechev', 'baalut', 'baalut_year'])
-
+    df = pd.read_csv('owner.csv', usecols=['mispar_rechev', 'baalut', 'baalut_dt', 'baalut_year'])
+    print(df['baalut'].unique())
+    # Convert 'baalut_dt' to datetime format
+    df['baalut_dt'] = pd.to_datetime(df['baalut_dt'])
+    # Get the row with the lowest 'baalut_dt' date value for each 'mispar_rechev' = new cars
+    df = df.loc[df.groupby('mispar_rechev')['baalut_dt'].idxmin()]
+    # df = df.loc[(df['baalut'] == 'השכרה') & (df['baalut_year'] == 2017)]
+    print(df.shape)
+    print(df.columns)
     resource_id1 = '053cea08-09bc-40ec-8f7a-156f0677aff3'
     url = 'https://data.gov.il/api/action/datastore_search'
 

@@ -36,7 +36,7 @@ for offset in range(0, total_requests * limit, limit):
 # Create a DataFrame from the combined results
 df = pd.DataFrame(results)
 
-print(len(df.loc[(df['degem_nm'] == '117.343') & (df['degem_cd'] == 54) & (df['shnat_yitzur'] == 2017)]))
+print(df['mehir'].loc[(df['degem_nm'] == '117.343') & (df['degem_cd'] == 54) & (df['shnat_yitzur'] == 2017)])
 
 # # Average prices per importer by year
 # for importer in df['semel_yevuan'].unique():

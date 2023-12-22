@@ -78,10 +78,11 @@ def new_cars_private():
     # Get the row with the lowest 'baalut_dt' date value for each 'mispar_rechev' = new cars
     df_first_owner = df.loc[df.groupby('mispar_rechev')['baalut_dt'].idxmin()]
 
-    # make dataframe consisting of private first owners
-    df_first_owner_private = df_first_owner.loc[df_first_owner['baalut'] == 'פרטי']
-    print(df_first_owner_private.shape)
-    print(df_first_owner_private.columns)
+    # make dataframe consisting of private first owners for 2017
+    df_first_owner_private_2017 = df_first_owner.loc[(df_first_owner['baalut'] == 'פרטי')
+                                                     & (df_first_owner['baalut_dt'].dt.year == 2017)]
+    print(df_first_owner_private_2017.shape)
+    print(df_first_owner_private_2017.columns)
 
     # Resources for looking up info about the cars
     resource_id1 = '053cea08-09bc-40ec-8f7a-156f0677aff3'
@@ -90,28 +91,27 @@ def new_cars_private():
 
     price_by_year = {2017: [], 2018: [], 2019: [], 2020: [], 2021: [], 2022: [], 2023: []}
 
-    for year in df_first_owner_private['baalut_year'].unique():
-        for car in df_first_owner_private['mispar_rechev'].unique():
-            params1 = {"resource_id": resource_id1, "filters": f'{{"mispar_rechev": "{car}"}}'}
+    for car in df_first_owner_private_2017['mispar_rechev'].unique():
+        params1 = {"resource_id": resource_id1, "filters": f'{{"mispar_rechev": "{car}"}}'}
 
-            # Make the HTTP request
-            response = requests.get(url, params=params1)
+        # Make the HTTP request
+        response = requests.get(url, params=params1)
 
-            # Check if the request was successful (status code 200)
-            if response.status_code == 200:
-                # Parse the response JSON
-                data1 = json.loads(response.text)
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            # Parse the response JSON
+            data1 = json.loads(response.text)
 
-                # Getting data for each car
-                if 'records' in data1['result'] and data1['result']['records']:
-                    degem_nm = data1['result']['records'][0]['degem_nm']
-                    degem_cd = data1['result']['records'][0]['degem_cd']
-                    shnat_yitzur = data1['result']['records'][0]['shnat_yitzur']
+            # Getting data for each car
+            if 'records' in data1['result'] and data1['result']['records']:
+                degem_nm = data1['result']['records'][0]['degem_nm']
+                degem_cd = data1['result']['records'][0]['degem_cd']
+                shnat_yitzur = data1['result']['records'][0]['shnat_yitzur']
 
-                    car_price = get_car_price(degem_nm, degem_cd, shnat_yitzur)
+                car_price = get_car_price(degem_nm, degem_cd, shnat_yitzur)
 
-                    if car_price:
-                        price_by_year[shnat_yitzur].append(car_price)
+                if car_price:
+                    price_by_year[shnat_yitzur].append(car_price)
 
     for year, prices in price_by_year.items():
         if prices:
@@ -143,6 +143,6 @@ def get_car_price(degem_nm, degem_cd, shnat_yitzur):
 
 
 
-new_cars_private()
+# new_cars_private()
 
 
