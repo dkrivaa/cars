@@ -40,7 +40,7 @@ def data_license(license):
     similar_car_license = similar(mispar_rechev, degem_nm, shnat_yitzur)
     print('similar cars: ', len(similar_car_license))
 
-    if shnat_yitzur > 2016 & len(info[2]) > 0:
+    if shnat_yitzur > 2016 and len(info[2]) > 0:
         kl, owner = calc_for_similar_cars(similar_car_license)
 
         kl = [value for value in kl if value is not None]
@@ -63,9 +63,6 @@ def data_license(license):
 
     # Prices of new cars (same model) according to importers
     prices(degem_nm, degem_cd, shnat_yitzur)
-
-
-
 
 
 def similar(mispar_rechev, degem_nm, shnat_yitzur):
