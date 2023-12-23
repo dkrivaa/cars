@@ -2,6 +2,7 @@ import aiohttp
 import asyncio
 import pandas as pd
 
+
 async def fetch_price(session, degem_nm, degem_cd, shnat_yitzur):
     resource_id5 = '39f455bf-6db0-4926-859d-017f34eacbcb'
     url = 'https://data.gov.il/api/action/datastore_search'
@@ -15,6 +16,7 @@ async def fetch_price(session, degem_nm, degem_cd, shnat_yitzur):
         if 'records' in data2['result'] and data2['result']['records']:
             return data2['result']['records'][0]['mehir']
 
+
 async def process_car(session, car, resource_id1):
     params1 = {"resource_id": resource_id1, "filters": f'{{"mispar_rechev": "{car}"}}'}
     url = 'https://data.gov.il/api/action/datastore_search'
@@ -27,6 +29,7 @@ async def process_car(session, car, resource_id1):
             shnat_yitzur = data1['result']['records'][0]['shnat_yitzur']
 
             return await fetch_price(session, degem_nm, degem_cd, shnat_yitzur)
+
 
 async def main():
     # Load only necessary columns

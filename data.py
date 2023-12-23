@@ -176,7 +176,9 @@ def prices(degem_nm, degem_cd, shnat_yitzur):
 
         # Create a dictionary where key is shnat_yitzur and value is mehir value
         result_dict = {item['shnat_yitzur']: item['mehir'] for item in data['result']['records']}
-        if result_dict[shnat_yitzur]:
+        print(result_dict)
+        # if result_dict[shnat_yitzur]:
+        if len(result_dict) > 0:
             print(result_dict[shnat_yitzur])
         else:
             print('No Data')
