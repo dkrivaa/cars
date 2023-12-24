@@ -32,38 +32,41 @@ def data_license(license):
 
             info.append(data['result']['records'])
 
-    degem_nm = info[0][0]['degem_nm']
-    degem_cd = info[0][0]['degem_cd']
-    shnat_yitzur = info[0][0]['shnat_yitzur']
+    if len(info[0]) > 0:
+        degem_nm = info[0][0]['degem_nm']
+        degem_cd = info[0][0]['degem_cd']
+        shnat_yitzur = info[0][0]['shnat_yitzur']
 
-    # Making list of similar cars - model and production year
-    similar_car_license = similar(mispar_rechev, degem_nm, shnat_yitzur)
-    print('similar cars: ', len(similar_car_license))
+        # Making list of similar cars - model and production year
+        similar_car_license = similar(mispar_rechev, degem_nm, shnat_yitzur)
+        print('similar cars: ', len(similar_car_license))
 
-    if shnat_yitzur > 2016 and len(info[2]) > 0:
-        kl, owner = calc_for_similar_cars(similar_car_license)
+        if shnat_yitzur > 2016 and len(info[2]) > 0:
+            kl, owner = calc_for_similar_cars(similar_car_license)
 
-        kl = [value for value in kl if value is not None]
-        average_kilometer = (int(sum(kl)/len(kl)))
+            kl = [value for value in kl if value is not None]
+            average_kilometer = (int(sum(kl)/len(kl)))
 
-        owner = [value for value in owner if value is not None]
-        average_owner = (int(sum(owner) / len(owner)))
+            owner = [value for value in owner if value is not None]
+            average_owner = (int(sum(owner) / len(owner)))
 
-        # # Calculating various comparable variables
-        print('Kilometers - this car: ', info[2][0]['kilometer_test_aharon'], 'average similar cars: ', average_kilometer)
-        print('owners - this car: ', len(info[3]), 'average similar cars: ', average_owner)
+            # # Calculating various comparable variables
+            print('Kilometers - this car: ', info[2][0]['kilometer_test_aharon'], 'average similar cars: ', average_kilometer)
+            print('owners - this car: ', len(info[3]), 'average similar cars: ', average_owner)
+
+        else:
+            average_kilometer = 'No data available'
+            average_owner = 'No data available'
+
+            # # Calculating various comparable data
+            print('Kilometers - this car: ', 'No data available.', 'average similar cars: ', average_kilometer)
+            print('owners - this car: ', 'No data available.', 'average similar cars: ', average_owner)
+
+        # Prices of new cars (same model) according to importers
+        prices(degem_nm, degem_cd, shnat_yitzur)
 
     else:
-        average_kilometer = 'No data available'
-        average_owner = 'No data available'
-
-        # # Calculating various comparable data
-        print('Kilometers - this car: ', 'No data available.', 'average similar cars: ', average_kilometer)
-        print('owners - this car: ', 'No data available.', 'average similar cars: ', average_owner)
-
-    # Prices of new cars (same model) according to importers
-    prices(degem_nm, degem_cd, shnat_yitzur)
-
+        print("No Data")
 
 def similar(mispar_rechev, degem_nm, shnat_yitzur):
     resource_id1 = "053cea08-09bc-40ec-8f7a-156f0677aff3"
