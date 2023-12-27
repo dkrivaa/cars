@@ -63,10 +63,14 @@ def data_license(license):
             print('owners - this car: ', 'No data available.', 'average similar cars: ', average_owner)
 
         # Prices of new cars (same model) according to importers
-        prices(degem_nm, degem_cd, shnat_yitzur)
+        price = prices(degem_nm, degem_cd, shnat_yitzur)
 
     else:
         print("No Data")
+
+    return info[0][0]['shnat_yitzur'], info[2][0]['kilometer_test_aharon'], len(info[3]), price
+
+
 
 def similar(mispar_rechev, degem_nm, shnat_yitzur):
     resource_id1 = "053cea08-09bc-40ec-8f7a-156f0677aff3"
@@ -186,5 +190,5 @@ def prices(degem_nm, degem_cd, shnat_yitzur):
         else:
             print('No Data')
 
-
+        return result_dict[shnat_yitzur]
 
